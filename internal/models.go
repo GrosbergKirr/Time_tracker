@@ -5,18 +5,23 @@ import (
 )
 
 type User struct {
-	Id         int    `json:"id,omitempty"`
-	Name       string `json:"name,omitempty"`
-	Surname    string `json:"surname,omitempty"`
-	Patronymic string `json:"patronymic,omitempty"`
-	Address    string `json:"address,omitempty"`
-	Seria      int    `json:"pasport_seria,omitempty"`
-	Num        int    `json:"pasport_num,omitempty"`
+	Id          int    `json:"id" validate:"required"`
+	Surname     string `json:"surname,omitempty"`
+	Name        string `json:"name,omitempty"`
+	Patronymic  string `json:"patronymic,omitempty"`
+	Address     string `json:"address,omitempty"`
+	PassportNum string `json:"passportNumber,omitempty"`
 }
 
 type Task struct {
-	Id    int
-	Begin time.Time
-	End   time.Time
-	User  User
+	Id     int       `json:"id" validate:"required"`
+	Name   string    `json:"name,omitempty"`
+	Begin  time.Time `json:"time_begin,omitempty"`
+	End    time.Time `json:"time_end,omitempty"`
+	UserId int       `json:"user_id,omitempty"`
+}
+
+type Passport struct {
+	PassportSerie  string `json:"passportSerie"`
+	PassportNumber string `json:"passportNumber"`
 }

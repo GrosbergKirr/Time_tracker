@@ -10,9 +10,9 @@ import (
 	"github.com/GrosbergKirr/Time_tracker/internal"
 )
 
-func UserGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.HandlerFunc {
+func TaskGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const path string = "api/user_getter"
+		const path string = "api/task_getter"
 		var req internal.User
 		err := json.NewDecoder(r.Body).Decode(&req)
 		if err != nil {
@@ -26,23 +26,22 @@ func UserGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.
 
 		ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 		defer cancel()
-		ok := make(chan []internal.User)
+		ok := make(chan []internal.Task)
 		go func() {
-			err = user.GetUser(log, req, page, perPage, ok)
+			err := user.GetTasks(log, req, page, perPage, ok)
 			if err != nil {
 				log.Error("Get data from db error", slog.Any("err: ", err), slog.Any("path", path))
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
-
 		}()
-		var res []internal.User
 		select {
-		case res = <-ok:
+		case res := <-ok:
+
 			if err := json.NewEncoder(w).Encode(res); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
-			log.Info("Get user from success")
+			log.Info("Get tasks success")
 		case <-ctx.Done():
 			log.Error("Timeout error", slog.Any("path", path))
 			w.WriteHeader(http.StatusRequestTimeout)

@@ -3,7 +3,7 @@ package storage
 import (
 	"database/sql"
 	"fmt"
-	"os"
+	"log"
 
 	//_ "github.com/jackc/pgx/v5/stdlib"
 	//"github.com/jmoiron/sqlx"
@@ -22,13 +22,12 @@ func InitStorage(user, pass, name, mode string) (*Storage, error) {
 	dbPath := fmt.Sprintf("postgres://%s:%s@localhost:5432/%s?sslmode=%s", user, pass, name, mode)
 	db, err := sql.Open("postgres", dbPath)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		os.Exit(1)
+		log.Fatalf("Storage init error: %e", err)
 	}
 	//stdDb := GetStandardDB(db)
 	err = goose.Up(db, "migrations")
 	if err != nil {
-		return nil, fmt.Errorf("failed to up migration %e", err)
+		log.Fatalf("Migration error error: %e", err)
 	}
 	return &Storage{Db: db}, nil
 }

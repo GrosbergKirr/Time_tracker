@@ -1,7 +1,7 @@
 package internal
 
 import (
-	"log"
+	"log/slog"
 	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
@@ -27,17 +27,17 @@ type HttpConfig struct {
 	IdleTimeout time.Duration `env:"HTTP_IDLE_TIMEOUT"`
 }
 
-func SetupConfig() *Config {
+func SetupConfig(log *slog.Logger) *Config {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Error("Error loading .env file")
+		return nil
 	}
-
 	var cfg Config
-	if err := cleanenv.ReadEnv(&cfg); err != nil {
-		log.Fatalf("can't read config: %s", err)
+	if err = cleanenv.ReadEnv(&cfg); err != nil {
+		log.Error("can't read config: %s", err)
+		return nil
 	}
-
 	return &cfg
 
 }

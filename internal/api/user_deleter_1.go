@@ -10,9 +10,9 @@ import (
 	"github.com/GrosbergKirr/Time_tracker/internal"
 )
 
-func UserGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.HandlerFunc {
+func UserDeleter(ctx context.Context, log *slog.Logger, user UserInterface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		const path string = "api/user_getter"
+		const path string = "api/user_deleter"
 		var req internal.User
 		err := json.NewDecoder(r.Body).Decode(&req)
 		if err != nil {
@@ -20,29 +20,24 @@ func UserGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		page := r.URL.Query().Get("page")
-		perPage := r.URL.Query().Get("per_page")
 		log.Info("Get and decode JSON success")
 
 		ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 		defer cancel()
-		ok := make(chan []internal.User)
+		ok := make(chan bool)
 		go func() {
-			err = user.GetUser(log, req, page, perPage, ok)
+			err = user.DeleteUser(log, req.Id, ok)
 			if err != nil {
-				log.Error("Get data from db error", slog.Any("err: ", err), slog.Any("path", path))
-				w.WriteHeader(http.StatusInternalServerError)
+				log.Error("Delete user error", slog.Any("err: ", err), slog.Any("path", path))
+				w.WriteHeader(http.StatusBadRequest)
 				return
 			}
-
 		}()
-		var res []internal.User
+
 		select {
-		case res = <-ok:
-			if err := json.NewEncoder(w).Encode(res); err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-			}
-			log.Info("Get user from success")
+		case <-ok:
+			log.Info("Delete user from success")
+			w.WriteHeader(http.StatusOK)
 		case <-ctx.Done():
 			log.Error("Timeout error", slog.Any("path", path))
 			w.WriteHeader(http.StatusRequestTimeout)

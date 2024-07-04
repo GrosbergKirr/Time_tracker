@@ -3,7 +3,8 @@ package server
 import (
 	"log/slog"
 	"net/http"
-	"time_track/internal"
+
+	"github.com/GrosbergKirr/Time_tracker/internal"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -16,11 +17,8 @@ func ServerRun(log *slog.Logger, cfg *internal.Config, router chi.Router) {
 		WriteTimeout: cfg.Timeout,
 		IdleTimeout:  cfg.IdleTimeout,
 	}
-
 	err := srv.ListenAndServe()
 	if err != nil {
 		log.Error("failed to start server", err)
-	} else {
-		log.Info("server started")
 	}
 }
