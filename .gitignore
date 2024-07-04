@@ -4,7 +4,7 @@
 
 
 # binary
-./bin
+.bin
 
 # env file
 .env
