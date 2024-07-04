@@ -1,0 +1,28 @@
+version: "3.1"
+services:
+  app:
+    image: main
+    build: ./
+    ports:
+      - "9090:9090"
+    depends_on:
+      time_tracker_db:
+        condition: service_healthy
+    container_name: app
+  time_tracker_db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: /usr/bin/pg_isready
+      interval: 2s
+      timeout: 2s
+      retries: 3
+    environment:
+      POSTGRES_DB: time_tracker
+      POSTGRES_USER: gros
+      POSTGRES_PASSWORD: grosBerg22
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_HOST_AUTH_METHOD: md5
+      POSTGRES_INITDB_ARGS: --auth=md5
+    container_name: time_tracker_db

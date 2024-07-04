@@ -4,7 +4,7 @@
 
 
 # binary
-bin/
+bin/main/
 
 # env file
 .env

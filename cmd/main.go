@@ -11,8 +11,6 @@ import (
 	httpSwagger "github.com/swaggo/http-swagger"
 
 	"github.com/go-chi/chi/v5"
-
-	_ "github.com/GrosbergKirr/Time_tracker/docs"
 )
 
 func main() {
@@ -20,9 +18,9 @@ func main() {
 	cfg := internal.SetupConfig(log)
 
 	log.Info("config % logger set success")
-	db, err := storage.InitStorage(cfg.Username, cfg.Password, cfg.Database, cfg.Mode)
+	db, err := storage.InitStorage(log, cfg.Username, cfg.Password, cfg.Adress, cfg.Database, cfg.Mode)
 	if err != nil {
-		log.Info("Failed to initialize storage")
+		log.Error("Failed to initialize storage")
 	}
 	log.Info("storage initialized")
 

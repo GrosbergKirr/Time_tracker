@@ -32,6 +32,7 @@ func UserCreator(ctx context.Context, log *slog.Logger, user UserInterface) http
 		log.Info("Get and decode JSON success")
 
 		reqToServ := RefactorPasswordForSideAPI(req)
+
 		resp, stat, err := client.GetDataFromSideAPI(log, reqToServ)
 		if err != nil {
 			log.Error("fail to create client: ", slog.Any("err", err), slog.Any("path", path))

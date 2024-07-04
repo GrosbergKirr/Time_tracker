@@ -3,7 +3,7 @@ package storage
 import (
 	"database/sql"
 	"fmt"
-	"log"
+	"log/slog"
 
 	//_ "github.com/jackc/pgx/v5/stdlib"
 	//"github.com/jmoiron/sqlx"
@@ -15,19 +15,18 @@ type Storage struct {
 	Db *sql.DB
 }
 
-//	func GetStandardDB(sqlxDB *sqlx.DB) *sql.DB {
-//		return sqlxDB.DB
-//	}
-func InitStorage(user, pass, name, mode string) (*Storage, error) {
-	dbPath := fmt.Sprintf("postgres://%s:%s@localhost:5432/%s?sslmode=%s", user, pass, name, mode)
+func InitStorage(log *slog.Logger, user, pass, addr, name, mode string) (*Storage, error) {
+	dbPath := fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=%s", user, pass, addr, name, mode)
 	db, err := sql.Open("postgres", dbPath)
 	if err != nil {
-		log.Fatalf("Storage init error: %e", err)
+		log.Error("Storage init error: %e", err)
+		return nil, err
 	}
-	//stdDb := GetStandardDB(db)
+
 	err = goose.Up(db, "migrations")
 	if err != nil {
-		log.Fatalf("Migration error error: %e", err)
+		log.Error("Migration error: %e", err)
+		return nil, err
 	}
 	return &Storage{Db: db}, nil
 }

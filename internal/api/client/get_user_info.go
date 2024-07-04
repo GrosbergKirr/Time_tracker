@@ -13,7 +13,6 @@ import (
 
 func GetDataFromSideAPI(log *slog.Logger, passport internal.Passport) (internal.User, int, error) {
 	client := http.Client{}
-
 	urlBody, exists := os.LookupEnv("CLIENT_URL")
 	if !exists {
 		log.Error("set CLIENT_URL env variable")
