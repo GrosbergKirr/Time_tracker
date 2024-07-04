@@ -8,3 +8,4 @@ bin/main/
 
 # env file
 .env
+.env.docker
