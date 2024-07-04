@@ -26,6 +26,7 @@ type HttpConfig struct {
 	Port        string        `env:"HTTP_PORT"`
 	Timeout     time.Duration `env:"HTTP_TIMEOUT"`
 	IdleTimeout time.Duration `env:"HTTP_IDLE_TIMEOUT"`
+	ClientUrl   string        `env:"CLIENT_URL"`
 }
 
 func SetupConfig(log *slog.Logger) *Config {
@@ -39,6 +40,7 @@ func SetupConfig(log *slog.Logger) *Config {
 		log.Error("can't read config: %s", err)
 		return nil
 	}
+	log.Info("Config set success")
 	return &cfg
 
 }

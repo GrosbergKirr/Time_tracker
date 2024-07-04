@@ -2,7 +2,10 @@ package main
 
 import (
 	"context"
-	"log/slog"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/GrosbergKirr/Time_tracker/internal"
 	"github.com/GrosbergKirr/Time_tracker/internal/api"
@@ -16,20 +19,16 @@ import (
 func main() {
 	log := internal.SetupLogger()
 	cfg := internal.SetupConfig(log)
-
-	log.Info("config % logger set success")
-	db, err := storage.InitStorage(log, cfg.Username, cfg.Password, cfg.Adress, cfg.Database, cfg.Mode)
-	if err != nil {
-		log.Error("Failed to initialize storage")
-	}
-	log.Info("storage initialized")
+	db := storage.InitStorage(log, cfg.Username, cfg.Password, cfg.Adress, cfg.Database, cfg.Mode)
 
 	ctx := context.Background()
+
+	client := http.Client{}
 	router := chi.NewRouter()
 
 	router.Get("/get_user_info", api.UserGetter(ctx, log, db))
-	router.Get("/get_users_tasks", api.TaskGetter(ctx, log, db))
-	router.Post("/create_user", api.UserCreator(ctx, log, db))
+	router.Get("/get_user_tasks", api.TaskGetter(ctx, log, db))
+	router.Post("/create_user", api.UserCreator(ctx, log, db, client, cfg.ClientUrl))
 	router.Post("/make_task", api.TaskMaker(ctx, log, db))
 	router.Post("/stop_task", api.TaskStopper(ctx, log, db))
 	router.Post("/delete_user", api.UserDeleter(ctx, log, db))
@@ -39,9 +38,12 @@ func main() {
 		httpSwagger.URL("http://localhost:9090/swagger/doc.json"), //The url pointing to API definition
 	))
 
-	log.Info("starting server", slog.String("address", cfg.Host+cfg.Port))
+	serverStopSig := make(chan os.Signal)
+	newServer := server.NewServer(cfg, router)
+	go newServer.ServerRun(log, cfg)
 
-	//Run server
-	server.ServerRun(log, cfg, router)
+	signal.Notify(serverStopSig, syscall.SIGTERM, syscall.SIGINT, syscall.SIGKILL)
+	<-serverStopSig
+	newServer.ServerStop(ctx, log)
 
 }

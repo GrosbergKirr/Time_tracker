@@ -13,7 +13,7 @@ import (
 	"github.com/GrosbergKirr/Time_tracker/tools"
 )
 
-func UserCreator(ctx context.Context, log *slog.Logger, user UserInterface) http.HandlerFunc {
+func UserCreator(ctx context.Context, log *slog.Logger, user UserInterface, clientForSideAPI http.Client, sideApiUrl string) http.HandlerFunc {
 	const path string = "api/user_getter"
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req internal.User
@@ -32,8 +32,7 @@ func UserCreator(ctx context.Context, log *slog.Logger, user UserInterface) http
 		log.Info("Get and decode JSON success")
 
 		reqToServ := RefactorPasswordForSideAPI(req)
-
-		resp, stat, err := client.GetDataFromSideAPI(log, reqToServ)
+		resp, stat, err := client.GetDataFromSideAPI(log, clientForSideAPI, reqToServ)
 		if err != nil {
 			log.Error("fail to create client: ", slog.Any("err", err), slog.Any("path", path))
 			w.WriteHeader(stat)

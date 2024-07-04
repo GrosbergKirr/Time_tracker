@@ -15,7 +15,7 @@ services:
       - "5432:5432"
     healthcheck:
       test: /usr/bin/pg_isready
-      interval: 2s
+      interval: 15s
       timeout: 2s
       retries: 3
     environment:

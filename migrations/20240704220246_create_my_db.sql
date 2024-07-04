@@ -16,7 +16,9 @@ CREATE TABLE IF NOT EXISTS tasks(
                                     user_id int,
                                     foreign key (user_id) references users (id)
 );
-CREATE INDEX idx_task_id ON tasks (user_id);
 -- +goose StatementEnd
 
-
+-- +goose Down
+-- +goose StatementBegin
+SELECT 'down SQL query';
+-- +goose StatementEnd

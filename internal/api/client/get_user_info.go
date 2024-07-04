@@ -11,8 +11,8 @@ import (
 	"github.com/GrosbergKirr/Time_tracker/internal"
 )
 
-func GetDataFromSideAPI(log *slog.Logger, passport internal.Passport) (internal.User, int, error) {
-	client := http.Client{}
+func GetDataFromSideAPI(log *slog.Logger, client http.Client, passport internal.Passport) (internal.User, int, error) {
+
 	urlBody, exists := os.LookupEnv("CLIENT_URL")
 	if !exists {
 		log.Error("set CLIENT_URL env variable")
