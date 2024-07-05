@@ -12,7 +12,7 @@ func (s *Storage) UpdateUser(log *slog.Logger, user internal.User, ok chan bool)
 	const path string = "storage/user_updater"
 	err := s.UserExistenceChecker(log, user.Id)
 	if err != nil {
-		log.Error("user existence error", slog.Any("err: ", err), slog.Any("path", path))
+		log.Error("user existence error", slog.Any("path", path))
 		return err
 	}
 	log.Debug("Check user id is valid success", slog.Any("id", user.Id))
@@ -37,12 +37,12 @@ func (s *Storage) UpdateUser(log *slog.Logger, user internal.User, ok chan bool)
 	psql := baseQuery.PlaceholderFormat(sq.Dollar)
 	query, args, err := psql.ToSql()
 	if err != nil {
-		log.Error("Failed to build query: ", slog.Any("err: ", err), slog.Any("path", path))
+		log.Error("Failed to build query: ", slog.Any("path", path))
 		return err
 	}
 	stmt, err := s.Db.Prepare(query)
 	if err != nil {
-		log.Error("Failed to prepare query: ", slog.Any("err: ", err), slog.Any("path", path))
+		log.Error("Failed to prepare query: ", slog.Any("path", path))
 		return err
 	}
 	log.Debug("Prepare query success")
@@ -50,7 +50,7 @@ func (s *Storage) UpdateUser(log *slog.Logger, user internal.User, ok chan bool)
 	mu.Lock()
 	_, err = stmt.Query(args...)
 	if err != nil {
-		log.Error("Failed to execute query: ", slog.Any("err: ", err), slog.Any("path", path))
+		log.Error("Failed to execute query: ", slog.Any("path", path))
 		return err
 	}
 	mu.Unlock()

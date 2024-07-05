@@ -22,19 +22,19 @@ func (s *Storage) MakeTask(log *slog.Logger, task internal.Task, ok chan bool) e
 	psql := baseQuery.PlaceholderFormat(sq.Dollar)
 	query, args, err := psql.ToSql()
 	if err != nil {
-		log.Error("Failed to build query: ", slog.Any("err: ", err), slog.Any("path", path))
+		log.Error("Failed to build query: ", slog.Any("path", path))
 		return err
 	}
 	stmt, err := s.Db.Prepare(query)
 	if err != nil {
-		log.Error("Failed to prepare query: ", slog.Any("err: ", err), slog.Any("path", path))
+		log.Error("Failed to prepare query: ", slog.Any("path", path))
 		return err
 	}
 	log.Debug("Prepare query success")
 
 	_, err = stmt.Query(args...)
 	if err != nil {
-		log.Error("Failed to execute query: ", slog.Any("err: ", err), slog.Any("path", path))
+		log.Error("Failed to execute query: ", slog.Any("path", path))
 		return err
 	}
 	log.Debug("Create task un DB success")
@@ -55,19 +55,19 @@ func (s *Storage) StopTask(log *slog.Logger, task internal.Task, ok chan bool) e
 	psql := baseQuery.PlaceholderFormat(sq.Dollar)
 	query, args, err := psql.ToSql()
 	if err != nil {
-		log.Error("Failed to build query: ", slog.Any("err: ", err), slog.Any("path", path))
+		log.Error("Failed to build query: ", slog.Any("path", path))
 		return err
 	}
 	stmt, err := s.Db.Prepare(query)
 	if err != nil {
-		log.Error("Failed to prepare query: ", slog.Any("err: ", err), slog.Any("path", path))
+		log.Error("Failed to prepare query: ", slog.Any("path", path))
 		return err
 	}
 	log.Debug("Prepare query success")
 
 	_, err = stmt.Query(args...)
 	if err != nil {
-		log.Error("Failed to execute query: ", slog.Any("err: ", err), slog.Any("path", path))
+		log.Error("Failed to execute query: ", slog.Any("path", path))
 		return err
 	}
 	log.Debug("Stop Task inn DB success")

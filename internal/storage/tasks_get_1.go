@@ -15,7 +15,7 @@ func (s *Storage) GetTasks(log *slog.Logger, user internal.User, page, perPage s
 	const path string = "api/tasks_get"
 	err := s.UserExistenceChecker(log, user.Id)
 	if err != nil {
-		log.Error("Failed get User", slog.Any("err: ", err), slog.Any("path", path))
+		log.Error("Failed get User", slog.Any("path", path))
 		return err
 	}
 	baseQueryGetTask := sq.Select("*").From("tasks")
@@ -38,12 +38,12 @@ func (s *Storage) GetTasks(log *slog.Logger, user internal.User, page, perPage s
 	psql1 := baseQueryGetTask.PlaceholderFormat(sq.Dollar)
 	query, args, err := psql1.ToSql()
 	if err != nil {
-		log.Error("Failed to build query: ", slog.Any("err: ", err), slog.Any("path", path))
+		log.Error("Failed to build query: ", slog.Any("path", path))
 		return err
 	}
 	stmt, err := s.Db.Prepare(query)
 	if err != nil {
-		log.Error("Failed to prepare query: ", slog.Any("err: ", err), slog.Any("path", path))
+		log.Error("Failed to prepare query: ", slog.Any("path", path))
 		return err
 	}
 	log.Debug("Prepare query success")
@@ -52,7 +52,7 @@ func (s *Storage) GetTasks(log *slog.Logger, user internal.User, page, perPage s
 	mu.Lock()
 	rows, err := stmt.Query(args...)
 	if err != nil {
-		log.Error("Failed to execute query: ", slog.Any("err: ", err), slog.Any("path", path))
+		log.Error("Failed to execute query: ", slog.Any("path", path))
 		return err
 	}
 	mu.Unlock()
@@ -61,7 +61,7 @@ func (s *Storage) GetTasks(log *slog.Logger, user internal.User, page, perPage s
 		t := internal.Task{}
 		err = rows.Scan(&t.Id, &t.Name, &t.Begin, &t.End, &t.UserId)
 		if err != nil {
-			log.Error("cant write sql to go-struct", slog.Any("err: ", err), slog.Any("path", path))
+			log.Error("cant write sql to go-struct", slog.Any("path", path))
 			return err
 		}
 		tasks = append(tasks, t)
