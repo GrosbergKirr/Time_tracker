@@ -2,8 +2,8 @@
 ## REST-server Time-Tracker
 
 ### Usage
-1. local: ``` git clone https://github.com/GrosbergKirr/Time_tracker ```
-2. docker: ``` docker-compose up```
+1. local: ``` git clone https://github.com/GrosbergKirr/Time_tracker ``` ``` go run main.go```
+2. docker: ``` go build -o ./bin/main main.go```    ``` docker-compose up```
 ### Коротко о сервисе: Сервис способен создавать в БД новых пользователей, менять их данные, создавать для них задачи, помечать время выполнения. БД создается путем миграции при старте сервиса. (Таймаут на походы в базу: 3 сек)
 ### Сервис имеет методы:
 

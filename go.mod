@@ -10,6 +10,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/pressly/goose v2.7.0+incompatible
 	github.com/swaggo/http-swagger v1.3.4
+	github.com/swaggo/swag v1.16.3
 )
 
 require (
@@ -26,8 +27,6 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/swaggo/files v1.0.1 // indirect
-	github.com/swaggo/http-swagger/example/go-chi v0.0.0-20230830153024-537f045bded0 // indirect
-	github.com/swaggo/swag v1.16.3 // indirect
 	golang.org/x/net v0.26.0 // indirect
 	golang.org/x/tools v0.22.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
