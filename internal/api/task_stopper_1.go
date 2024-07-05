@@ -10,6 +10,17 @@ import (
 	"github.com/GrosbergKirr/Time_tracker/internal"
 )
 
+// TaskStopper godoc
+// @Summary Stop task
+// @Tags tasks
+// @Accept  json
+// @Produce  json
+// @Param        id  path      integer  true  "Task ID"
+// @Success 200 "Success"
+// @Failure 400 "Invalid input"
+// @Failure 500 "Internal server error"
+// @Failure 408 "Request timeout"
+// @Router /stop_task [post]
 func TaskStopper(ctx context.Context, log *slog.Logger, task UserInterface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const path string = "api/task_stopper"

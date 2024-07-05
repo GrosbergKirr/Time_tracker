@@ -10,6 +10,19 @@ import (
 	"github.com/GrosbergKirr/Time_tracker/internal"
 )
 
+// TaskGetter godoc
+// @Summary Get user's tasks
+// @Tags tasks
+// @Accept  json
+// @Produce  json
+// @Param   page     query    string     true  "Page number"
+// @Param   per_page query    string     true  "Number of items per page"
+// @Param        user_id   path      integer  true  "User ID"
+// @Success 200 {array} internal.Task "List of tasks"
+// @Failure 400 "Invalid input"
+// @Failure 500 "Internal server error"
+// @Failure 408 "Request timeout"
+// @Router /get_user_tasks [get]
 func TaskGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const path string = "api/task_getter"

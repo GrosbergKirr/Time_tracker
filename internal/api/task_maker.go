@@ -10,6 +10,17 @@ import (
 	"github.com/GrosbergKirr/Time_tracker/internal"
 )
 
+// TaskMaker godoc
+// @Summary Create task for user
+// @Tags tasks
+// @Accept  json
+// @Produce  json
+// @Param        task  body      internal.Task  true  "Task ID" example({"name":"Cook", "user_id":1})
+// @Success 200 "Success"
+// @Failure 400 "Invalid input"
+// @Failure 500 "Internal server error"
+// @Failure 408 "Request timeout"
+// @Router /make_task [post]
 func TaskMaker(ctx context.Context, log *slog.Logger, task UserInterface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const path string = "api/task_maker"

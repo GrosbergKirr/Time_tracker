@@ -10,6 +10,17 @@ import (
 	"github.com/GrosbergKirr/Time_tracker/internal"
 )
 
+// UserDeleter godoc
+// @Summary Delete user
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param        id   body      string  true  "User ID"
+// @Success 200 "Success"
+// @Failure 400 "Invalid input"
+// @Failure 500 "Internal server error"
+// @Failure 408 "Request timeout"
+// @Router /delete_user [delete]
 func UserDeleter(ctx context.Context, log *slog.Logger, user UserInterface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const path string = "api/user_deleter"

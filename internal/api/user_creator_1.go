@@ -13,6 +13,17 @@ import (
 	"github.com/GrosbergKirr/Time_tracker/tools"
 )
 
+// UserCreator godoc
+// @Summary Create user
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param        passportNumber   path      string  true  "Passport data" example({"passportNumber": "1111 123456"})
+// @Success 200 "Success"
+// @Failure 400 "Invalid input"
+// @Failure 500 "Internal server error"
+// @Failure 408 "Request timeout"
+// @Router /create_user [post]
 func UserCreator(ctx context.Context, log *slog.Logger, user UserInterface, clientForSideAPI http.Client, sideApiUrl string) http.HandlerFunc {
 	const path string = "api/user_getter"
 	return func(w http.ResponseWriter, r *http.Request) {

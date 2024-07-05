@@ -14,11 +14,10 @@ CREATE TABLE IF NOT EXISTS tasks(
                                     time_begin timestamp default current_timestamp,
                                     time_end timestamp default current_timestamp,
                                     user_id int,
-                                    foreign key (user_id) references users (id)
+                                    foreign key (user_id) references users (id) ON DELETE CASCADE
 );
 -- +goose StatementEnd
 
--- +goose Down
--- +goose StatementBegin
-SELECT 'down SQL query';
--- +goose StatementEnd
+
+
+

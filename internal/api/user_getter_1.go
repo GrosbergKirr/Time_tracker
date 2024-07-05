@@ -10,6 +10,19 @@ import (
 	"github.com/GrosbergKirr/Time_tracker/internal"
 )
 
+// UserGetter godoc
+// @Summary Get users
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param   page     query    string     true  "Page number"
+// @Param   per_page query    string     true  "Number of items per page"
+// @Param   user     body     internal.User true "User details" example(internal.User){"id": 5, "name":"Ivan", "surname":"Ivanov", "patronymic": "Ivanovich", "address": "SPB", "passportNumber":"1111 123456"}
+// @Success 200 {array} internal.User "List of users"
+// @Failure 400 "Invalid input"
+// @Failure 500 "Internal server error"
+// @Failure 408 "Request timeout"
+// @Router /get_user_info [get]
 func UserGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const path string = "api/user_getter"

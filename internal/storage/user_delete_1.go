@@ -18,18 +18,18 @@ func (s *Storage) DeleteUser(log *slog.Logger, userId int, ok chan bool) error {
 	psql := baseQuery.PlaceholderFormat(sq.Dollar)
 	query, args, err := psql.ToSql()
 	if err != nil {
-		log.Error("Failed to build query: ", slog.Any("err", err))
+		log.Error("Failed to build query: ")
 		return err
 	}
 	stmt, err := s.Db.Prepare(query)
 	if err != nil {
-		log.Error("Failed to prepare query: ", slog.Any("err", err))
+		log.Error("Failed to prepare query: ")
 		return err
 	}
 	log.Debug("Prepare query success")
 	_, err = stmt.Query(args...)
 	if err != nil {
-		log.Error("Failed to execute query: ", slog.Any("err", err))
+		log.Error("Failed to execute query: ")
 		return err
 	}
 	log.Debug("Delete user from db success")

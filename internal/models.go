@@ -5,7 +5,7 @@ import (
 )
 
 type User struct {
-	Id          int    `json:"id" validate:"required"`
+	Id          int    `json:"id,omitempty"`
 	Surname     string `json:"surname,omitempty"`
 	Name        string `json:"name,omitempty"`
 	Patronymic  string `json:"patronymic,omitempty"`
@@ -14,7 +14,7 @@ type User struct {
 }
 
 type Task struct {
-	Id     int       `json:"id" validate:"required"`
+	Id     int       `json:"id,omitempty"`
 	Name   string    `json:"name,omitempty"`
 	Begin  time.Time `json:"time_begin,omitempty"`
 	End    time.Time `json:"time_end,omitempty"`
