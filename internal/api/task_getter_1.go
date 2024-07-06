@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/GrosbergKirr/Time_tracker/internal"
+	"github.com/GrosbergKirr/Time_tracker/tools"
 )
 
 // TaskGetter godoc
@@ -36,6 +37,13 @@ func TaskGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.
 		page := r.URL.Query().Get("page")
 		perPage := r.URL.Query().Get("per_page")
 		log.Info("Get and decode JSON success")
+
+		idIsRequired := true
+		if err = tools.UserValidate(log, req, idIsRequired); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		log.Info("Validation true")
 
 		ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 		defer cancel()

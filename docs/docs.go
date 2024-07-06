@@ -102,7 +102,7 @@ const docTemplate = `{
             }
         },
         "/get_user_info": {
-            "get": {
+            "post": {
                 "consumes": [
                     "application/json"
                 ],
@@ -132,7 +132,6 @@ const docTemplate = `{
                         "description": "User details",
                         "name": "user",
                         "in": "body",
-                        "required": true,
                         "schema": {
                             "$ref": "#/definitions/internal.User"
                         }
@@ -311,7 +310,6 @@ const docTemplate = `{
                         "description": "Update details",
                         "name": "user",
                         "in": "body",
-                        "required": true,
                         "schema": {
                             "$ref": "#/definitions/internal.User"
                         }

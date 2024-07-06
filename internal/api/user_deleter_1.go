@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/GrosbergKirr/Time_tracker/internal"
+	"github.com/GrosbergKirr/Time_tracker/tools"
 )
 
 // UserDeleter godoc
@@ -32,6 +33,13 @@ func UserDeleter(ctx context.Context, log *slog.Logger, user UserInterface) http
 			return
 		}
 		log.Info("Get and decode JSON success")
+
+		idIsRequired := true
+		if err = tools.UserValidate(log, req, idIsRequired); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		log.Info("Validation true")
 
 		ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 		defer cancel()

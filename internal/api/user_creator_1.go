@@ -10,7 +10,6 @@ import (
 
 	"github.com/GrosbergKirr/Time_tracker/internal"
 	"github.com/GrosbergKirr/Time_tracker/internal/api/client"
-	"github.com/GrosbergKirr/Time_tracker/tools"
 )
 
 // UserCreator godoc
@@ -34,12 +33,12 @@ func UserCreator(ctx context.Context, log *slog.Logger, user UserInterface, clie
 			w.WriteHeader(http.StatusBadRequest)
 		}
 
-		val, err := tools.ValidatePassport(req.PassportNum)
-		if (err != nil) || val == false {
-			log.Error("fail to validate passport number", slog.Any("err: ", err), slog.Any("path", path))
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
+		//val, err := tools.ValidatePassport(req.PassportNum)
+		//if (err != nil) || val == false {
+		//	log.Error("fail to validate passport number", slog.Any("err: ", err), slog.Any("path", path))
+		//	w.WriteHeader(http.StatusBadRequest)
+		//	return
+		//}
 		log.Info("Get and decode JSON success")
 
 		reqToServ := RefactorPasswordForSideAPI(req)

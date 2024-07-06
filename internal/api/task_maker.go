@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/GrosbergKirr/Time_tracker/internal"
+	"github.com/GrosbergKirr/Time_tracker/tools"
 )
 
 // TaskMaker godoc
@@ -32,6 +33,12 @@ func TaskMaker(ctx context.Context, log *slog.Logger, task UserInterface) http.H
 			return
 		}
 		log.Info("Get and decode JSON success")
+
+		if err = tools.TaskValidate(log, req); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		log.Info("Validation true")
 
 		ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 		defer cancel()

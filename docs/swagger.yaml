@@ -92,7 +92,7 @@ paths:
       tags:
       - users
   /get_user_info:
-    get:
+    post:
       consumes:
       - application/json
       parameters:
@@ -109,7 +109,6 @@ paths:
       - description: User details
         in: body
         name: user
-        required: true
         schema:
           $ref: '#/definitions/internal.User'
       produces:
@@ -226,7 +225,6 @@ paths:
       - description: Update details
         in: body
         name: user
-        required: true
         schema:
           $ref: '#/definitions/internal.User'
       produces:
