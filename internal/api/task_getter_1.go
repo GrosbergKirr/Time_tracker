@@ -2,13 +2,13 @@ package api
 
 import (
 	"context"
-	"encoding/json"
 	"log/slog"
 	"net/http"
 	"time"
 
 	"github.com/GrosbergKirr/Time_tracker/internal"
 	"github.com/GrosbergKirr/Time_tracker/tools"
+	"github.com/go-chi/render"
 )
 
 // TaskGetter godoc
@@ -18,17 +18,17 @@ import (
 // @Produce  json
 // @Param   page     query    string     true  "Page number"
 // @Param   per_page query    string     true  "Number of items per page"
-// @Param        user_id   path      integer  true  "User ID"
+// @Param        user_id   body      map[string]int  true  "User id" example({"user_id": 1})
 // @Success 200 {array} internal.Task "List of tasks"
 // @Failure 400 "Invalid input"
 // @Failure 500 "Internal server error"
 // @Failure 408 "Request timeout"
-// @Router /get_user_tasks [get]
+// @Router /get_user_tasks [post]
 func TaskGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const path string = "api/task_getter"
 		var req internal.User
-		err := json.NewDecoder(r.Body).Decode(&req)
+		err := render.DecodeJSON(r.Body, &req)
 		if err != nil {
 			log.Error("fail to decode json", slog.Any("err: ", err), slog.Any("path", path))
 			w.WriteHeader(http.StatusBadRequest)
@@ -38,7 +38,7 @@ func TaskGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.
 		perPage := r.URL.Query().Get("per_page")
 		log.Info("Get and decode JSON success")
 
-		idIsRequired := true
+		idIsRequired := false
 		if err = tools.UserValidate(log, req, idIsRequired); err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			return
@@ -59,7 +59,7 @@ func TaskGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.
 		select {
 		case res := <-ok:
 
-			if err := json.NewEncoder(w).Encode(res); err != nil {
+			if render.JSON(w, r, res); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 			log.Info("Get tasks success")

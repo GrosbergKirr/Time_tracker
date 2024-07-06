@@ -2,13 +2,13 @@ package api
 
 import (
 	"context"
-	"encoding/json"
 	"log/slog"
 	"net/http"
 	"time"
 
 	"github.com/GrosbergKirr/Time_tracker/internal"
 	"github.com/GrosbergKirr/Time_tracker/tools"
+	"github.com/go-chi/render"
 )
 
 // TaskStopper godoc
@@ -26,7 +26,7 @@ func TaskStopper(ctx context.Context, log *slog.Logger, task UserInterface) http
 	return func(w http.ResponseWriter, r *http.Request) {
 		const path string = "api/task_stopper"
 		var req internal.Task
-		err := json.NewDecoder(r.Body).Decode(&req)
+		err := render.DecodeJSON(r.Body, &req)
 		if err != nil {
 			log.Error("fail to decode json", slog.Any("err: ", err), slog.Any("path", path))
 			w.WriteHeader(http.StatusBadRequest)
@@ -34,7 +34,8 @@ func TaskStopper(ctx context.Context, log *slog.Logger, task UserInterface) http
 		}
 		log.Info("Get and decode JSON success")
 
-		if err = tools.TaskValidate(log, req); err != nil {
+		idIsRequired := true
+		if err = tools.TaskValidate(log, req, idIsRequired); err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}

@@ -130,7 +130,7 @@ paths:
       tags:
       - users
   /get_user_tasks:
-    get:
+    post:
       consumes:
       - application/json
       parameters:
@@ -144,11 +144,12 @@ paths:
         name: per_page
         required: true
         type: string
-      - description: User ID
-        in: path
+      - description: User id
+        example: '{"id": 1}'
+        in: body
         name: user_id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -173,11 +174,11 @@ paths:
       - application/json
       parameters:
       - description: Task ID
+        example: '{"user_id": 1, "name":"Run"}'
         in: body
         name: task
         required: true
-        schema:
-          $ref: '#/definitions/internal.Task'
+        type: string
       produces:
       - application/json
       responses:
@@ -198,7 +199,8 @@ paths:
       - application/json
       parameters:
       - description: Task ID
-        in: path
+        example: '{"id":1, "user_id": 1}'
+        in: body
         name: id
         required: true
         type: integer

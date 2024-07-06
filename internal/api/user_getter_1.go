@@ -2,13 +2,13 @@ package api
 
 import (
 	"context"
-	"encoding/json"
 	"log/slog"
 	"net/http"
 	"time"
 
 	"github.com/GrosbergKirr/Time_tracker/internal"
 	"github.com/GrosbergKirr/Time_tracker/tools"
+	"github.com/go-chi/render"
 )
 
 // UserGetter godoc
@@ -28,7 +28,7 @@ func UserGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.
 	return func(w http.ResponseWriter, r *http.Request) {
 		const path string = "api/user_getter"
 		var req internal.User
-		err := json.NewDecoder(r.Body).Decode(&req)
+		err := render.DecodeJSON(r.Body, &req)
 		if err != nil {
 			log.Error("fail to decode json", slog.Any("err: ", err), slog.Any("path", path))
 			w.WriteHeader(http.StatusBadRequest)
@@ -60,7 +60,7 @@ func UserGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.
 		var res []internal.User
 		select {
 		case res = <-ok:
-			if err := json.NewEncoder(w).Encode(res); err != nil {
+			if render.JSON(w, r, res); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 			log.Info("Get user from success")

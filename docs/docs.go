@@ -160,7 +160,7 @@ const docTemplate = `{
             }
         },
         "/get_user_tasks": {
-            "get": {
+            "post": {
                 "consumes": [
                     "application/json"
                 ],
@@ -187,11 +187,16 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "type": "integer",
-                        "description": "User ID",
+                        "description": "User id",
                         "name": "user_id",
-                        "in": "path",
-                        "required": true
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "integer"
+                            }
+                        }
                     }
                 ],
                 "responses": {

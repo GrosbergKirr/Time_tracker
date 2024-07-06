@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"encoding/json"
 	"log/slog"
 	"net/http"
 	"strings"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/GrosbergKirr/Time_tracker/internal"
 	"github.com/GrosbergKirr/Time_tracker/internal/api/client"
+	"github.com/go-chi/render"
 )
 
 // UserCreator godoc
@@ -27,7 +27,7 @@ func UserCreator(ctx context.Context, log *slog.Logger, user UserInterface, clie
 	const path string = "api/user_getter"
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req internal.User
-		err := json.NewDecoder(r.Body).Decode(&req)
+		err := render.DecodeJSON(r.Body, &req)
 		if err != nil {
 			log.Error("fail to decode json", slog.Any("err", err), slog.Any("path", path))
 			w.WriteHeader(http.StatusBadRequest)
