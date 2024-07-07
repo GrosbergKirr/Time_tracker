@@ -19,6 +19,7 @@ type Task struct {
 	Begin  time.Time `json:"time_begin,omitempty"`
 	End    time.Time `json:"time_end,omitempty"`
 	UserId int       `json:"user_id,omitempty"`
+	Status string    `json:"status,omitempty"`
 }
 
 type Passport struct {

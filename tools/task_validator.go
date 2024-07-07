@@ -16,7 +16,6 @@ func TaskValidate(log *slog.Logger, req internal.Task, idRequired bool) error {
 		if req.Id <= 0 {
 			log.Error("task id is required and should be above 0", slog.Any("err", err))
 			return err
-
 		}
 	}
 	if req.Name != "" {

@@ -59,7 +59,7 @@ func (s *Storage) GetTasks(log *slog.Logger, user internal.User, page, perPage s
 	var tasks []internal.Task
 	for rows.Next() {
 		t := internal.Task{}
-		err = rows.Scan(&t.Id, &t.Name, &t.Begin, &t.End, &t.UserId)
+		err = rows.Scan(&t.Id, &t.Name, &t.Begin, &t.End, &t.UserId, &t.Status)
 		if err != nil {
 			log.Error("cant write sql to go-struct", slog.Any("path", path))
 			return err

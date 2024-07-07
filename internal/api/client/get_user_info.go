@@ -6,24 +6,17 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
-	"os"
 
 	"github.com/GrosbergKirr/Time_tracker/internal"
 )
 
-func GetDataFromSideAPI(log *slog.Logger, client http.Client, passport internal.Passport) (internal.User, int, error) {
-
-	urlBody, exists := os.LookupEnv("CLIENT_URL")
-	if !exists {
-		log.Error("set CLIENT_URL env variable")
-		return internal.User{}, http.StatusInternalServerError, nil
-	}
-
+func GetDataFromSideAPI(log *slog.Logger, client http.Client, passport internal.Passport, sideApiUrl string) (internal.User, int, error) {
 	body, err := json.Marshal(passport)
 	if err != nil {
 		log.Error("Marshal json error", err)
 	}
-	req, err := http.NewRequest("GET", urlBody, bytes.NewBuffer(body))
+
+	req, err := http.NewRequest("GET", sideApiUrl, bytes.NewBuffer(body))
 	if err != nil {
 		log.Error("failed to create request", err)
 		return internal.User{}, http.StatusInternalServerError, err

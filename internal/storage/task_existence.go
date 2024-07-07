@@ -31,7 +31,7 @@ func (s *Storage) TaskExistenceChecker(log *slog.Logger, taskId int) error {
 	}
 	task := internal.Task{}
 	for rows.Next() {
-		err = rows.Scan(&task.Id, &task.Name, &task.Begin, &task.End, &task.UserId)
+		err = rows.Scan(&task.Id, &task.Name, &task.Begin, &task.End, &task.UserId, &task.Status)
 		if err != nil {
 			log.Error("cant write sql to go-struct", slog.Any("err: ", err), slog.Any("path", path))
 			return err

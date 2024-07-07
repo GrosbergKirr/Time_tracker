@@ -13,24 +13,20 @@ import (
 	"github.com/GrosbergKirr/Time_tracker/internal/storage"
 )
 
-// @title Swagger Example API
+// @title Time Tracker app swagger
 // @version 1.0
-// @description This is a sample server Petstore server.
 // @termsOfService http://swagger.io/terms/
-
 // @contact.name API Support
 // @contact.url http://www.swagger.io/support
 // @contact.email support@swagger.io
-
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
 // @host localhost:9090
 
 func main() {
 	log := internal.SetupLogger()
 	cfg := internal.SetupConfig(log)
-	db := storage.InitStorage(log, cfg.Username, cfg.Password, cfg.Adress, cfg.Database, cfg.Mode)
+	db := storage.InitStorage(log, cfg.Username, cfg.Password, cfg.Address, cfg.Database, cfg.Mode)
 
 	ctx := context.Background()
 
@@ -45,5 +41,4 @@ func main() {
 	signal.Notify(serverStopSig, syscall.SIGTERM, syscall.SIGINT, syscall.SIGKILL)
 	<-serverStopSig
 	newServer.ServerStop(ctx, log)
-
 }

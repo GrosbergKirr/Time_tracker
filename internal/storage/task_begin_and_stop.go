@@ -16,8 +16,8 @@ func (s *Storage) MakeTask(log *slog.Logger, task internal.Task, ok chan bool) e
 	}
 	log.Debug("User exists success")
 
-	baseQuery := sq.Insert("tasks").Columns("name", "time_begin", "user_id").
-		Values(task.Name, time.Now(), task.UserId)
+	baseQuery := sq.Insert("tasks").Columns("name", "time_begin", "time_end", "user_id", "status").
+		Values(task.Name, time.Now(), time.Time{}, task.UserId, "In progress")
 
 	psql := baseQuery.PlaceholderFormat(sq.Dollar)
 	query, args, err := psql.ToSql()
@@ -50,7 +50,7 @@ func (s *Storage) StopTask(log *slog.Logger, task internal.Task, ok chan bool) e
 		return err
 	}
 	log.Debug("Task exists success")
-	baseQuery := sq.Update("tasks").Set("time_end", time.Now()).Where(sq.Eq{"id": task.Id})
+	baseQuery := sq.Update("tasks").Set("time_end", time.Now()).Set("status", "finished").Where(sq.Eq{"id": task.Id})
 
 	psql := baseQuery.PlaceholderFormat(sq.Dollar)
 	query, args, err := psql.ToSql()

@@ -10,5 +10,4 @@ func SetupLogger() *slog.Logger {
 	log = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}))
 	log.Info("Logger set success")
 	return log
-
 }

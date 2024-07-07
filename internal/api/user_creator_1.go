@@ -9,6 +9,7 @@ import (
 
 	"github.com/GrosbergKirr/Time_tracker/internal"
 	"github.com/GrosbergKirr/Time_tracker/internal/api/client"
+	"github.com/GrosbergKirr/Time_tracker/tools"
 	"github.com/go-chi/render"
 )
 
@@ -32,17 +33,17 @@ func UserCreator(ctx context.Context, log *slog.Logger, user UserInterface, clie
 			log.Error("fail to decode json", slog.Any("err", err), slog.Any("path", path))
 			w.WriteHeader(http.StatusBadRequest)
 		}
-
-		//val, err := tools.ValidatePassport(req.PassportNum)
-		//if (err != nil) || val == false {
-		//	log.Error("fail to validate passport number", slog.Any("err: ", err), slog.Any("path", path))
-		//	w.WriteHeader(http.StatusBadRequest)
-		//	return
-		//}
 		log.Info("Get and decode JSON success")
 
+		idIsRequired := false
+		if err = tools.UserValidate(log, req, idIsRequired); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		log.Info("Validation true")
+
 		reqToServ := RefactorPasswordForSideAPI(req)
-		resp, stat, err := client.GetDataFromSideAPI(log, clientForSideAPI, reqToServ)
+		resp, stat, err := client.GetDataFromSideAPI(log, clientForSideAPI, reqToServ, sideApiUrl)
 		if err != nil {
 			log.Error("fail to create client: ", slog.Any("err", err), slog.Any("path", path))
 			w.WriteHeader(stat)

@@ -16,7 +16,7 @@ type Config struct {
 type DatabaseConfig struct {
 	Username string `env:"DB_USERNAME"`
 	Password string `env:"DB_PASSWORD"`
-	Adress   string `env:"DB_ADDRESS"`
+	Address  string `env:"DB_ADDRESS"`
 	Database string `env:"DB_DATABASE"`
 	Mode     string `env:"DB_MODE"`
 }
@@ -42,5 +42,4 @@ func SetupConfig(log *slog.Logger) *Config {
 	}
 	log.Info("Config set success")
 	return &cfg
-
 }

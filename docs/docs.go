@@ -42,7 +42,7 @@ const docTemplate = `{
                         "example": "{\"passportNumber\": \"1111 123456\"}",
                         "description": "Passport data",
                         "name": "passportNumber",
-                        "in": "path",
+                        "in": "body",
                         "required": true
                     }
                 ],
@@ -76,13 +76,11 @@ const docTemplate = `{
                 "summary": "Delete user",
                 "parameters": [
                     {
-                        "description": "User ID",
+                        "example": "{\"id\": 1}",
+						"description": "User ID",
                         "name": "id",
                         "in": "body",
                         "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
                     }
                 ],
                 "responses": {
@@ -101,7 +99,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/get_user_info": {
+        "/get_users": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -159,7 +157,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/get_user_tasks": {
+        "/get_users_tasks": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -187,16 +185,11 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+						"example": "{\"id\": 1}",
                         "description": "User id",
                         "name": "user_id",
                         "in": "body",
                         "required": true,
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "integer"
-                            }
-                        }
                     }
                 ],
                 "responses": {
@@ -235,13 +228,11 @@ const docTemplate = `{
                 "summary": "Create task for user",
                 "parameters": [
                     {
+						"example": "{\"name\": \"Run\", \"user_id\": 1}",
                         "description": "Task ID",
                         "name": "task",
                         "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/internal.Task"
-                        }
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -274,10 +265,10 @@ const docTemplate = `{
                 "summary": "Stop task",
                 "parameters": [
                     {
-                        "type": "integer",
+                        "example": "{\"id\": 1}",
                         "description": "Task ID",
                         "name": "id",
-                        "in": "path",
+                        "in": "body",
                         "required": true
                     }
                 ],
@@ -347,6 +338,9 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
+                "status": {
+                    "type": "string"
+                },
                 "time_begin": {
                     "type": "string"
                 },
@@ -390,8 +384,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:9090",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Swagger Example API",
-	Description:      "This is a sample server Petstore server.",
+	Title:            "Time Tracker app swagger",
+	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
