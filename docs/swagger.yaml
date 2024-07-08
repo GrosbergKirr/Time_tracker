@@ -120,7 +120,7 @@ paths:
       tags:
         - users
   /get_users_tasks:
-    post:
+    get:
       consumes:
         - application/json
       parameters:

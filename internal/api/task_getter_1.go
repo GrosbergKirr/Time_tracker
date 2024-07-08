@@ -17,7 +17,7 @@ import (
 // @Produce  json
 // @Param   page     query    string     true  "Page number"
 // @Param   per_page query    string     true  "Number of items per page"
-// @Param        user_id   body      map[string]int  true  "User id" example({"user_id": 1})
+// @Param   per_page query    string     true  "User id"
 // @Success 200 {array} internal.Task "List of tasks"
 // @Failure 400 "Invalid input"
 // @Failure 500 "Internal server error"
@@ -46,6 +46,7 @@ func TaskGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.
 		case res := <-ok:
 			render.JSON(w, r, res)
 			w.WriteHeader(http.StatusInternalServerError)
+			log.Info("Get tasks success")
 
 			log.Info("Get tasks success")
 		case <-ctx.Done():

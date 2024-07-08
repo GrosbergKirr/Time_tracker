@@ -63,7 +63,7 @@ func UserGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.
 			if render.JSON(w, r, res); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
-			log.Info("Get user from success")
+			log.Info("Get user success")
 		case <-ctx.Done():
 			log.Error("Timeout error", slog.Any("path", path))
 			w.WriteHeader(http.StatusRequestTimeout)
