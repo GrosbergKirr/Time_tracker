@@ -3,11 +3,11 @@ package client
 import (
 	"bytes"
 	"encoding/json"
-	"io"
 	"log/slog"
 	"net/http"
 
 	"github.com/GrosbergKirr/Time_tracker/internal"
+	"github.com/go-chi/render"
 )
 
 func GetDataFromSideAPI(log *slog.Logger, client http.Client, passport internal.Passport, sideApiUrl string) (internal.User, int, error) {
@@ -30,15 +30,10 @@ func GetDataFromSideAPI(log *slog.Logger, client http.Client, passport internal.
 	}
 	defer resp.Body.Close()
 
-	responseBody, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Error("failed to read response body", err)
-		return internal.User{}, resp.StatusCode, err
-	}
 	var user internal.User
-	err = json.Unmarshal(responseBody, &user)
+	err = render.DecodeJSON(resp.Body, &user)
 	if err != nil {
-		log.Error("failed to unmarshal response body", err)
+		log.Error("fail to decode json", slog.Any("err: ", err))
 		return internal.User{}, resp.StatusCode, err
 	}
 	return user, resp.StatusCode, nil
