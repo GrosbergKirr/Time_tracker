@@ -15,7 +15,7 @@ import (
 func SetRouters(ctx context.Context, cfg *internal.Config, log *slog.Logger, db *storage.Storage, cli http.Client) chi.Router {
 	router := chi.NewRouter()
 	router.Post("/get_users", api.UserGetter(ctx, log, db))
-	router.Post("/get_users_tasks", api.TaskGetter(ctx, log, db))
+	router.Get("/get_users_tasks", api.TaskGetter(ctx, log, db))
 	router.Post("/create_user", api.UserCreator(ctx, log, db, cli, cfg.ClientUrl))
 	router.Post("/make_task", api.TaskMaker(ctx, log, db))
 	router.Post("/stop_task", api.TaskStopper(ctx, log, db))

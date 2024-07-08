@@ -158,7 +158,7 @@ const docTemplate = `{
             }
         },
         "/get_users_tasks": {
-            "post": {
+            "get": {
                 "consumes": [
                     "application/json"
                 ],
@@ -185,11 +185,11 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-						"example": "{\"id\": 1}",
+                        "type": "string",
                         "description": "User id",
                         "name": "user_id",
-                        "in": "body",
-                        "required": true,
+                        "in": "query",
+                        "required": true
                     }
                 ],
                 "responses": {

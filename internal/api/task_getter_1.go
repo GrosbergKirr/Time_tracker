@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/GrosbergKirr/Time_tracker/internal"
-	"github.com/GrosbergKirr/Time_tracker/tools"
 	"github.com/go-chi/render"
 )
 
@@ -23,33 +22,20 @@ import (
 // @Failure 400 "Invalid input"
 // @Failure 500 "Internal server error"
 // @Failure 408 "Request timeout"
-// @Router /get_user_tasks [post]
+// @Router /get_users_tasks [get]
 func TaskGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		const path string = "api/task_getter"
-		var req internal.User
-		err := render.DecodeJSON(r.Body, &req)
-		if err != nil {
-			log.Error("fail to decode json", slog.Any("err: ", err), slog.Any("path", path))
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
 		page := r.URL.Query().Get("page")
 		perPage := r.URL.Query().Get("per_page")
-		log.Info("Get and decode JSON success")
-
-		idIsRequired := false
-		if err = tools.UserValidate(log, req, idIsRequired); err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-		log.Info("Validation true")
+		userId := r.URL.Query().Get("user_id")
+		log.Info("Get query success")
 
 		ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 		defer cancel()
 		ok := make(chan []internal.Task)
 		go func() {
-			err := user.GetTasks(log, req, page, perPage, ok)
+			err := user.GetTasks(log, userId, page, perPage, ok)
 			if err != nil {
 				log.Error("Get data from db error", slog.Any("err: ", err), slog.Any("path", path))
 				w.WriteHeader(http.StatusInternalServerError)
@@ -58,10 +44,9 @@ func TaskGetter(ctx context.Context, log *slog.Logger, user UserInterface) http.
 		}()
 		select {
 		case res := <-ok:
+			render.JSON(w, r, res)
+			w.WriteHeader(http.StatusInternalServerError)
 
-			if render.JSON(w, r, res); err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-			}
 			log.Info("Get tasks success")
 		case <-ctx.Done():
 			log.Error("Timeout error", slog.Any("path", path))
